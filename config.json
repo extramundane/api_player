@@ -1,0 +1,9 @@
+{
+    "provider": {
+        "servername": "server[:port]",
+        "username": "username",
+        "password": "password"
+    },
+    "local": {
+    }
+}
