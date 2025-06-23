@@ -6,7 +6,6 @@ class PlayerApi:
     servername = ''
     username = ''
     password = ''
-    save = True
     
     def build_url(self, action):
         url = '/player_api.php?username=' + self.username +\
@@ -18,6 +17,16 @@ class PlayerApi:
             url += '&action=get_live_categories'
         elif action == 'live_streams':
             url += '&action=get_live_streams'
+        elif action == 'vod_categories':
+            url += '&action=get_vod_categories'            
+        elif action == 'vod_streams':
+            url += '&action=get_vod_streams'
+        elif action == 'series_categories':
+            url += '&action=get_series_categories'            
+        elif action == 'series':
+            url += '&action=get_series'
+        elif action == 'series_info':
+            url += '&action=get_series_info'
         return url
         
         
@@ -38,7 +47,6 @@ class PlayerApi:
         self.servername = server
         self.username = user
         self.password = password
-        self.save = True
         
         url = self.build_url('auth')
         
