@@ -3,6 +3,7 @@
 import sys, getopt
 from player_api import PlayerApi
 from config import Config
+from env import Env
 
 # Doc https://github.com/engenex/xtream-codes-api-v2/blob/main/%5BHow-To%5D%20Player%20API%20v2%20-%20Tutorials%20-%20Xtream%20Codes.pdf
 
@@ -21,20 +22,25 @@ if __name__ == '__main__':
 
     config = Config()
     try:
-        conf = config.read('config.json')
+        conf = config.read(name)
         provider = conf['provider']
     except FileNotFoundError:
         print('File ' + name + ' not found')
         sys.exit(0)
 
+    # Initiate the environment (mostly constants)
+    env = Env()
+
+    # Initiate the Xtream API
     api = PlayerApi()
 
-    api.authenticate(\
-        provider['servername'], provider['username'],\
-        provider['password'])
+    # Authenticate and save result into file
+    api.authenticate(env, provider)
 
-    api.get_live_categories()
+    # Get live categories and save into file
+    api.get_live_categories(env)
 
-    api.get_live_streams()
+    # Get live streams and save into file
+    api.get_live_streams(env)
 
     sys.exit(0)
