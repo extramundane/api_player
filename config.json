@@ -2,7 +2,10 @@
     "provider": {
         "servername": "server[:port]",
         "username": "username",
-        "password": "password"
+        "password": "password",
+        "auth_file": "auth.json",
+        "live_categories_file": "live_categories.json",
+        "live_streams_file": "live_streams.json"
     },
     "local": {
     }
