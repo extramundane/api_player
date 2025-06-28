@@ -45,6 +45,10 @@ if __name__ == '__main__':
 
     # Authenticate and save result into file
     auth = api.authenticate(provider)
+    if auth == None:
+        print("Authentication failure")
+        sys.exit(0)
+
 
     user = auth['user_info']
 

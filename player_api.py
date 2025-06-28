@@ -52,7 +52,8 @@ class PlayerApi:
             with open(filename, "w") as f:
                 f.write((str)(body))
         print(response.status, response.reason)
-
+        if response.status != 200:
+            return None
         return json.loads(body)
 
 
