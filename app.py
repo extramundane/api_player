@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
     # Authenticate and save result into file
     auth = api.authenticate(provider)
-    #pprint.pp(auth)
+
     user = auth['user_info']
 
     # Only get more info if user is authenticated and active
@@ -77,6 +77,7 @@ if __name__ == '__main__':
                 else:
                     # Print stream name
                     print('   ' + entry['name'])
-
+    else:
+        print("User %s not authenticated" % (provider['username']))
 
     sys.exit(0)
