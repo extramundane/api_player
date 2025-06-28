@@ -57,20 +57,28 @@ class PlayerApi:
 
 
     def authenticate(self, provider):
-        self.servername = provider['servername']
-        self.username = provider['username']
-        self.password = provider['password']
+        if self.env.mode == 1:
+            print('Requesting authentication from remote')
+            self.servername = provider['servername']
+            self.username = provider['username']
+            self.password = provider['password']
 
-        url = self.build_url(self.env.AUTH)
+            url = self.build_url(self.env.AUTH)
 
-        data = self.request(url, self.provider['auth_file'])
+            data = self.request(url, self.provider['auth_file'])
+        else:
+            print("Using local file %s" %\
+                (self.provider['auth_file']))
+            reader = JsonReader(None)
+            data = reader.read_file(\
+                self.provider['auth_file'])
         return data
 
 
     def get_live_categories(self):
         if self.env.mode == 1:
-            print('Requesting live cateories from reomte')
-            url = self.build_url(read_live_categories)
+            print('Requesting live categories from remote')
+            url = self.build_url(self.env.LIVE_CATEGORIES)
 
             data = self.request(url,\
                 self.provider['live_categories_file'])
@@ -85,9 +93,11 @@ class PlayerApi:
 
     def get_live_streams(self):
         if self.env.mode == 1 :
+            print('Requesting live streams from remote')
             url = self.build_url(self.env.LIVE_STREAMS)
 
-            data = self.request(url, self.provider['live_streams_file'])
+            data = self.request(url,\
+                self.provider['live_streams_file'])
         else:
             print("Using local file %s" %\
                 (self.provider['live_streams_file']))

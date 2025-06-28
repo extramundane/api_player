@@ -4,6 +4,7 @@ import sys, getopt, pprint
 from player_api import PlayerApi
 from config import Config
 from env import Env
+from category_list import CatList
 
 # Doc https://github.com/engenex/xtream-codes-api-v2/blob/main/%5BHow-To%5D%20Player%20API%20v2%20-%20Tutorials%20-%20Xtream%20Codes.pdf
 
@@ -44,7 +45,7 @@ if __name__ == '__main__':
 
     # Authenticate and save result into file
     auth = api.authenticate(provider)
-    pprint.pp(auth)
+    #pprint.pp(auth)
     user = auth['user_info']
 
     # Only get more info if user is authenticated and active
@@ -52,14 +53,30 @@ if __name__ == '__main__':
 
         # Get live categories and save into file
         live_categories = api.get_live_categories()
-        #pprint.pp(live_categories)
-        for category in range(2):
-            pprint.pp(live_categories[category])
 
         # Get live streams and save into file
         live_streams = api.get_live_streams()
-        #pprint.pp(live_streams)
-        for stream in range(2):
-            pprint.pp(live_streams[stream])
+
+        list = CatList()
+        table = list.connect_live_streams(live_categories,\
+            live_streams)
+
+        # Iterate over the just created list, first entry for every
+        # category sub list is the category name, all subsequent
+        # entries are live stream objects
+        for key in table:
+            cat_id = key
+            stream_list = table[key]
+
+            n = len(stream_list)
+            for index in range(n):
+                entry = stream_list[index]
+                if index == 0:
+                    # Print category name
+                    print(entry)
+                else:
+                    # Print stream name
+                    print('   ' + entry['name'])
+
 
     sys.exit(0)
