@@ -1,13 +1,20 @@
 #!/usr/bin/python3
 
-import http.client, json
+import http.client, json, os
 from json_reader import JsonReader
 #from env import Env
+
+# Implements the XTREAM player_api interface to the remote server
+# - Retrieving live stream categories and actual streams
+# - Retrieving VOD categories and VOD streams
+# - Retrieving series categories, streams and series info
 
 class PlayerApi:
     servername = ''
     username = ''
     password = ''
+    useragent = ''
+    datadir = ''
     save = True
     env = None
     provider = None
@@ -23,6 +30,7 @@ class PlayerApi:
         '&password=' + self.password
 
         if action == 'auth':
+            print(url)
             return url
         elif action == self.env.LIVE_CATEGORIES:
             url += '&action=get_live_categories'
@@ -45,37 +53,46 @@ class PlayerApi:
         host = self.servername
         conn = http.client.HTTPConnection(host)
 
-        conn.request("GET", url, headers={"Host": host})
+        conn.request('GET', url,\
+            headers={'Host': host, 'User-Agent': self.useragent})
         response = conn.getresponse()
         body = response.read().decode('utf-8')
         if filename != None and self.save:
-            with open(filename, "w") as f:
+            with open(\
+                self.get_datadir(self.datadir, filename), 'w') as f:
                 f.write((str)(body))
         print(response.status, response.reason)
         if response.status != 200:
+            print('Request response status: ' + str(response.status))
             return None
         return json.loads(body)
 
 
+    # Authenticate against either a remote server or a local file
     def authenticate(self, provider):
+        self.servername = provider['servername']
+        self.username = provider['username']
+        self.password = provider['password']
+        self.useragent = provider['useragent']
+        self.datadir = provider['datadir']
+
         if self.env.mode == 1:
             print('Requesting authentication from remote')
-            self.servername = provider['servername']
-            self.username = provider['username']
-            self.password = provider['password']
 
             url = self.build_url(self.env.AUTH)
 
             data = self.request(url, self.provider['auth_file'])
         else:
-            print("Using local file %s" %\
-                (self.provider['auth_file']))
-            reader = JsonReader(None)
-            data = reader.read_file(\
+            local = self.get_local_file(self.datadir,\
                 self.provider['auth_file'])
+            print("Using local file %s" % (local))
+            reader = JsonReader(None)
+            data = reader.read_file(local)
         return data
 
 
+    # Read the live categories from either a remote server
+    # or a local file
     def get_live_categories(self):
         if self.env.mode == 1:
             print('Requesting live categories from remote')
@@ -92,6 +109,8 @@ class PlayerApi:
         return data
 
 
+    # Read the live streams from either a remote server
+    # or a local file
     def get_live_streams(self):
         if self.env.mode == 1 :
             print('Requesting live streams from remote')
@@ -106,3 +125,16 @@ class PlayerApi:
             data = reader.read_file(\
                 self.provider['live_streams_file'])
         return data
+
+
+    # Check if the datadir exists, create it if it doesn't
+    # Return the combined name of the file
+    def get_datadir(self, datadir, filename):
+        if not os.path.isdir(datadir):
+            print('Creating data direcrory ' + datadir)
+            os.mkdir(datadir)
+        return datadir + '/' + filename
+
+
+    def get_local_file(self, datadir, filename):
+        return datadir + '/' + filename

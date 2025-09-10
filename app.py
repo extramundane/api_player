@@ -31,8 +31,8 @@ if __name__ == '__main__':
             print('Mode remote')
             env.mode = 1
 
-    # Read in the configuration file
-    config = Config()
+    # Read in the configuration file, pass the enviroment
+    config = Config(env)
     try:
         conf = config.read(name)
         provider = conf['provider']
@@ -46,9 +46,9 @@ if __name__ == '__main__':
     # Authenticate and save result into file
     auth = api.authenticate(provider)
     if auth == None:
-        print("Authentication failure")
+        print('Authentication failure')
         sys.exit(0)
-
+    exit(0)
 
     user = auth['user_info']
 
