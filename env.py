@@ -13,6 +13,7 @@ class Env:
     DATA_DIR = 'data/'
 
     mode = 1  # 0 - local, 1 - remote
+    config_name = ''
 
     category_white_list = list()
 

@@ -12,13 +12,13 @@ class Config:
 
     def read(self, name):
         with open(name) as f:
-            d = json.load(f)
+            config = json.load(f)
             # Do we have a white list?
-            if 'category_white_list' in d['local']:
+            if 'category_white_list' in config['local']:
                 print('Found white list entry')
                 self.env.category_white_list =\
-                    d['local']['category_white_list']
-            return d
+                    config['local']['category_white_list']
+            return config
 
 
 

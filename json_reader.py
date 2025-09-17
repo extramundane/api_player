@@ -12,6 +12,7 @@ class JsonReader:
 
     def read(self, filename):
         with open(filename, 'r') as file:
+            # TODO Allow empty file
             data = json.load(file)
         return data
 
