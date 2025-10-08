@@ -12,20 +12,23 @@ class Cli:
         # Process command line arguments
         argList = argv[1:]
         options = "c:"
-        long_options = ["remote", "local"]
+        long_options = ["remote", "local", "probe="]
 
         arguments, values = getopt.getopt(argList, options, long_options)
 
         for currentArgument, currentValue in arguments:
             if currentArgument in ("-c"):
                 print (("Loading config (%s)") % (currentValue))
-                env.config_name = name = currentValue
+                env.config_name = currentValue
             if currentArgument in ("--local"):
                 print('Mode local')
                 env.mode = 0
             if currentArgument in ("--remote"):
                 print('Mode remote')
                 env.mode = 1
+            if currentArgument in ("--probe"):
+                print('Probe DNS %s' % (currentValue))
+                env.dns_mask = currentValue
 
 
 

@@ -79,7 +79,8 @@ class PlayerApi:
     # Authenticate against either a remote server or a local file
     def authenticate(self, provider):
         if self.env.mode == 1:
-            print('Requesting authentication from remote')
+            print('Requesting authentication from remote ' +
+                self.servername)
 
             url = self.build_url(self.env.AUTH)
 

@@ -14,6 +14,7 @@ class Env:
 
     mode = 1  # 0 - local, 1 - remote
     config_name = ''
+    dns_mask = None
 
     category_white_list = list()
 
