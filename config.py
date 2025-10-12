@@ -18,7 +18,7 @@ class Config:
                 print('Found white list entry')
                 self.env.category_white_list =\
                     config['local']['category_white_list']
+                print("White list: " + str(self.env.category_white_list))
             return config
-
 
 

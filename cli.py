@@ -11,7 +11,7 @@ class Cli:
 
         # Process command line arguments
         argList = argv[1:]
-        options = "c:"
+        options = "c:d"
         long_options = ["remote", "local", "probe="]
 
         arguments, values = getopt.getopt(argList, options, long_options)
@@ -26,6 +26,9 @@ class Cli:
             if currentArgument in ("--remote"):
                 print('Mode remote')
                 env.mode = 1
+            if currentArgument in ("-d"):
+                print('Display')
+                env.display = True
             if currentArgument in ("--probe"):
                 print('Probe DNS %s' % (currentValue))
                 env.dns_mask = currentValue
